@@ -1,45 +1,48 @@
 <?php
 session_start();
+require_once 'includes/db.php';
 
 
-if (isset($_SESSION['user_id'])) {
-    header("Location: dashboard.php");
-    exit;
-}
+$error = '';
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
+    $email = filter_input(INPUT_POST, "email", FILTER_VALIDATE_EMAIL);
+    $password = filter_input(INPUT_POST, "password", FILTER_SANITIZE_SPECIAL_CHARS);
 
-// $error = '';
-// if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-//     // Sanitize and validate inputs
-//     $email = filter_var(trim($_POST['email']), FILTER_SANITIZE_EMAIL);
-//     $password = $_POST['password'];
-//     // $role = $_POST['role'];
+    if ($email === false) {
+        $error = "Invalid Email Format!";
+    } else {
+        $prep_stmt = $conn->prepare("SELECT id, password, role FROM Users WHERE email = ?");
+        $prep_stmt->bind_param("s", $email);
+        $prep_stmt->execute();
+        $prep_stmt->store_result();
 
-//     // Validate email format
-//     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-//         $error = "Invalid email format!";
-//     }
-
-//     // Validate password
-//     if (!preg_match('/[A-Za-z]/', $password) || !preg_match('/[0-9]/', $password) || !preg_match('/[A-Z]/', $password) || strlen($password) < 8) {
-//         $error = "Password must have at least one number, one letter, one capital letter, and be at least 8 characters long!";
-//     }
-
-//     if (!isset($error)) {
-//         // Hash the password
-//         $hashed_password = password_hash($password, PASSWORD_DEFAULT);
-
-//         // Insert user into database
-//         $stmt = $conn->prepare("INSERT INTO Users (firstname, lastname, password, email, role, created_at) VALUES (?, ?, ?, ?, ?, NOW())");
-//         $stmt->bind_param("sssss", $firstname, $lastname, $hashed_password, $email, $role);
         
-//         if ($stmt->execute()) {
-//             $success = "User added successfully!";
-//         } else {
-//             $error = "Error adding user!";
-//         }
-//     }
-// }
+        if ($prep_stmt->num_rows > 0) {
+            $prep_stmt->bind_result($user_id, $user_stored_password, $role);
+            $prep_stmt->fetch();
+
+            
+            if (password_verify($password, $user_stored_password)) {
+                $_SESSION['user_id'] = $user_id;
+                $_SESSION['role'] = $role;
+                header("Location: Home.php");
+                exit;
+            } else {
+                $error = "Incorrect Password!";
+            }
+        } else {
+            $error = "No user found with that email!";
+        }
+        $prep_stmt->close();
+    }
+
+
+
+    
+    
+
+}
 
 
 ?>
@@ -49,21 +52,22 @@ if (isset($_SESSION['user_id'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Login</title>
+    <title>Dolphin CRM</title>
     <link rel="stylesheet" href="user_login.css">
 </head>
 <body>
+    <header>
+        <p>🐬Dolphin CRM</p>
+    </header>
     <div class="login-container">
-        <h2>User Login</h2>
+        <h2>Login</h2>
         <form method="POST" action="user_login.php">
             <div class="form-group">
-                <label for="email">Email Address:</label>
-                <input type="email" id="email" name="email" required placeholder="Enter your email">
+                <input type="email" id="email" name="email" required placeholder=" Email Address">
             </div>
 
             <div class="form-group">
-                <label for="password">Password:</label>
-                <input type="password" id="password" name="password" required placeholder="Enter your password">
+                <input type="password" id="password" name="password" required placeholder=" Password">
             </div>
 
             <div class="form-group">
@@ -77,10 +81,10 @@ if (isset($_SESSION['user_id'])) {
             <?php } ?>
         </form>
 
-        <!-- Link to registration page for users who don't have an account -->
-        <!-- You can enable this if you decide to add a registration feature later -->
-        <!-- <p><a href="register.php">Create an Account</a></p> -->
-    </div>
 
+    </div>
+    <header>
+        <p>Copyright © 2024 Dolphin CRM</p>
+    </header>
 </body>
 </html>
