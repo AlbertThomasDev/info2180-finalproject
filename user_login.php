@@ -17,7 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $prep_stmt->execute();
         $prep_stmt->store_result();
 
-        
+
         if ($prep_stmt->num_rows > 0) {
             $prep_stmt->bind_result($user_id, $user_stored_password, $role);
             $prep_stmt->fetch();
@@ -26,13 +26,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             if (password_verify($password, $user_stored_password)) {
                 $_SESSION['user_id'] = $user_id;
                 $_SESSION['role'] = $role;
-                header("Location: Home.php");
+                header("Location: public/Home.php");
                 exit;
             } else {
                 $error = "Incorrect Password!";
             }
         } else {
-            $error = "No user found with that email!";
+            $error = "No user found with this Email!";
         }
         $prep_stmt->close();
     }
