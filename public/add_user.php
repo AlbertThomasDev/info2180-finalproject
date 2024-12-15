@@ -1,14 +1,18 @@
 <?php
 session_start();
-require_once 'includes/db.php';
+require_once '../includes/db.php';
+require_once '../models/user.php';
 
-if ($_SESSION['role'] _= 'admin') {
-    header("Location: dashboard.php");
-    exit;
-}elseif ($_SERVER['REQUEST_METHOD'] == 'POST') {
+// if ($_SESSION['role'] == 'admin') {
+//     header("Location: dashboard.php");
+//     exit;
+// }else
 
-    $firstname = filter_var(trim($_POST['firstname']), FILTER_SANITIZE_STRING);
-    $lastname = filter_var(trim($_POST['lastname']), FILTER_SANITIZE_STRING);
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+
+    $firstname = filter_var(trim($_POST['first-name']), FILTER_SANITIZE_STRING);
+    $lastname = filter_var(trim($_POST['last-name']), FILTER_SANITIZE_STRING);
     $email = filter_var(trim($_POST['email']), FILTER_SANITIZE_EMAIL);
     $password = $_POST['password'];
     $role = $_POST['role'];
@@ -16,17 +20,24 @@ if ($_SESSION['role'] _= 'admin') {
     $error = "";
     if ($email === false) {
         $error = "Invalid Email Format!";
-    } else if (!preg_match('/[A-Za-z]/', $password) || !preg_match('/[0-9]/', $password) || !preg_match('/[A-Z]/', $password) || strlen($password) < 8){
+    }
+    
+    if (!preg_match('/[A-Za-z]/', $password) || !preg_match('/[0-9]/', $password) || !preg_match('/[A-Z]/', $password) || strlen($password) < 8){
             $error = "Password should include at least one number, letter, a capital letter, and be at least 8 characters long!";
         }
     
-    if (!isset($error)) {
+    if (empty($error)) {
         $hashed_password = password_hash($password, PASSWORD_DEFAULT);
         
-        $prep_stmt = $conn->prepare("INSERT INTO firstname, lastname, password, email, role, created_at VALUES ?, ?, ?, ?, ?, NOW()");
-        $prep_stmt->bind_param("sssss", $firstname, $lastname, $email, $password, $role);
-        
-        $prep_stmt->execute();
+        $prep_stmt = $conn->prepare("INSERT INTO Users (firstname, lastname, password, email, role, created_at) VALUES (?, ?, ?, ?, ?, NOW())");
+        $prep_stmt->bind_param("sssss", $firstname, $lastname, $hashed_password, $email, $role);
+        if ($prep_stmt->execute()) {
+            // Redirect to a success page or dashboard
+            header("Location: public/Home.php");
+            exit;
+        } else {
+            $error = "Error inserting user: " . $prep_stmt->error;
+        }
     }
 
 
@@ -79,12 +90,12 @@ if ($_SESSION['role'] _= 'admin') {
             </div>
 
             <div class="form-group">
-                <button type="submit">Login</button>
+                <button type="submit">Submit</button>
             </div>
             
             <?php if (isset($error)) { ?>
                 <div class="error-message">
-                    <?php alert($error); ?>  <!-- this is unsafe -->
+                <?php echo htmlspecialchars($error, ENT_QUOTES, 'UTF-8'); ?>
                 </div>
             <?php } ?>
         </form>

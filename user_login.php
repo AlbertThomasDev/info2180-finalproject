@@ -1,6 +1,7 @@
 <?php
 session_start();
 require_once 'includes/db.php';
+require_once 'models/user.php';
 
 
 $error = '';
@@ -12,20 +13,29 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if ($email === false) {
         $error = "Invalid Email Format!";
     } else {
-        $prep_stmt = $conn->prepare("SELECT id, password, role FROM Users WHERE email = ?");
+        $prep_stmt = $conn->prepare("SELECT * FROM Users WHERE email = ?");
         $prep_stmt->bind_param("s", $email);
         $prep_stmt->execute();
         $prep_stmt->store_result();
 
 
         if ($prep_stmt->num_rows > 0) {
-            $prep_stmt->bind_result($user_id, $user_stored_password, $role);
+            $prep_stmt->bind_result($user_id,$firstname, $lastname, $user_stored_password, $email,  $role, $created_at);
             $prep_stmt->fetch();
-
+            
             
             if (password_verify($password, $user_stored_password)) {
-                $_SESSION['user_id'] = $user_id;
+                
+                $loggedInUser = new User($user_id, $firstname, $lastname, $email, $role, $created_at);
+                // $loggedInUser = new User($user['id'], $user['firstname'], $user['lastname'], $user['email'], $user['role'], $user['created_at']);
+                
+                $_SESSION['user_id'] = $loggedInUser->getId();
+                $_SESSION['firstname'] = $loggedInUser->getFname();
+                $_SESSION['lastname'] = $loggedInUser->getLname();
+                $_SESSION['email'] = $loggedInUser->getEmail();
                 $_SESSION['role'] = $role;
+
+
                 header("Location: public/Home.php");
                 exit;
             } else {
