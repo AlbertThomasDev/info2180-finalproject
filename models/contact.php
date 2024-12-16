@@ -1,6 +1,9 @@
 <?php
-namespace app\models;
+namespace models;
+require_once '../includes/db.php';
 use PDO;
+use PDOException;
+
 
 class Contact {
 
@@ -122,6 +125,7 @@ class Contact {
 
     public static function getAllcontacts(){
         $stmt = self::$conn->prepare("SELECT * FROM contacts");
+        $stmt -> execute();
         $Contacts = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         foreach ($Contacts as $contact) {
@@ -156,17 +160,44 @@ class Contact {
     }
 
 
-    public static function addcontact($title, $firstname, $lastname, $email, $telephone, $company, $type, $assigned_to, $created_by){
-        $prep_stmt = self::$conn->prepare("INSERT INTO Contacts (title, firstname, lastname, email, telephone, company, type, assigned_to, created_by, created_at, updated_at VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW()");
-
-        $prep_stmt->bindValue($prep_stmt, 'sssssssii', $title, $firstname, $lastname, $email, $telephone, $company, $type, $assigned_to, $created_by);
-
-        $prep_stmt->execute();
+    public static function addcontact($title, $firstname, $lastname, $email, $telephone, $company, $type, $assigned_to, $created_by) {
+        try {
+            // Prepare the SQL statement
+            $prep_stmt = self::$conn->prepare("INSERT INTO Contacts 
+                (title, firstname, lastname, email, telephone, company, type, assigned_to, created_by, created_at, updated_at) 
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW())");
+    
+            // Bind values to the placeholders
+            $prep_stmt->bindParam(1, $title, PDO::PARAM_STR);
+            $prep_stmt->bindParam(2, $firstname, PDO::PARAM_STR);
+            $prep_stmt->bindParam(3, $lastname, PDO::PARAM_STR);
+            $prep_stmt->bindParam(4, $email, PDO::PARAM_STR);
+            $prep_stmt->bindParam(5, $telephone, PDO::PARAM_STR);
+            $prep_stmt->bindParam(6, $company, PDO::PARAM_STR);
+            $prep_stmt->bindParam(7, $type, PDO::PARAM_STR);
+            $prep_stmt->bindParam(8, $assigned_to, PDO::PARAM_INT);
+            $prep_stmt->bindParam(9, $created_by, PDO::PARAM_INT);
+    
+            // Execute the statement
+            if ($prep_stmt->execute()) {
+                // Redirect to a success page or dashboard
+                header("Location: ../public/Home.php");
+                exit;
+            } else {
+                $error = "Error inserting user.";
+            }
+        } catch (PDOException $e) {
+            $error = "Database Error: " . $e->getMessage();
+        }
+        if (!empty($error)) {
+        echo "<p style='color: red;'>$error</p>";
     }
+}
 
+    
     public static function emailCheck($email):bool {
         $stmt = self::$conn->prepare("SELECT * FROM contacts WHERE email = ?");
-        $stmt->bindValue('s',$email,PDO::PARAM_STR);
+        $stmt->bindParam('s',$email,PDO::PARAM_STR);
         $stmt->execute();
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -175,7 +206,7 @@ class Contact {
 
     public static function telcheck($telephone):bool {
         $stmt = self::$conn->prepare("SELECT * FROM contacts WHERE telephone = ?");
-        $stmt->bindValue('s',$telephone,PDO::PARAM_STR);
+        $stmt->bindParam('s',$telephone,PDO::PARAM_STR);
         $stmt->execute();
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
 

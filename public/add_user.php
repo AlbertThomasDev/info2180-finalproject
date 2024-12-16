@@ -26,22 +26,34 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $error = "Password should include at least one number, letter, a capital letter, and be at least 8 characters long!";
         }
     
-    if (empty($error)) {
-        $hashed_password = password_hash($password, PASSWORD_DEFAULT);
-        
-        $prep_stmt = $conn->prepare("INSERT INTO Users (firstname, lastname, password, email, role, created_at) VALUES (?, ?, ?, ?, ?, NOW())");
-        $prep_stmt->bind_param("sssss", $firstname, $lastname, $hashed_password, $email, $role);
-        if ($prep_stmt->execute()) {
-            // Redirect to a success page or dashboard
-            header("Location: public/Home.php");
-            exit;
-        } else {
-            $error = "Error inserting user: " . $prep_stmt->error;
+        if (empty($error)) {
+            $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+            
+            try {
+                $prep_stmt = $conn->prepare("INSERT INTO Users (firstname, lastname, password, email, role, created_at) 
+                                            VALUES (?, ?, ?, ?, ?, NOW())");
+                $prep_stmt->bindParam(1, $firstname, PDO::PARAM_STR);
+                $prep_stmt->bindParam(2, $lastname, PDO::PARAM_STR);
+                $prep_stmt->bindParam(3, $hashed_password, PDO::PARAM_STR);
+                $prep_stmt->bindParam(4, $email, PDO::PARAM_STR);
+                $prep_stmt->bindParam(5, $role, PDO::PARAM_STR);
+    
+                if ($prep_stmt->execute()) {
+                    // Redirect to a success page or dashboard
+                    header("Location: ../public/Home.php");
+                    exit;
+                } else {
+                    $error = "Error inserting user.";
+                }
+            } catch (PDOException $e) {
+                $error = "Database Error: " . $e->getMessage();
+            }
+        }
+    
+        if (!empty($error)) {
+            echo "<p style='color: red;'>$error</p>";
         }
     }
-
-
-}
 
 
 

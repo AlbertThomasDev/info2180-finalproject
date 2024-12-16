@@ -6,13 +6,15 @@ $xampp_username = 'root';
 $xampp_password = ''; 
 
 // Create connection
-$conn = new mysqli($host, $xampp_username, $xampp_password, $db_name);
+try{
+$conn = new PDO("mysql:host=$host;dbname=$db_name", $xampp_username, $xampp_password);
+$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
 // Check connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
+} catch (PDOException $e) {
+    die("Connection failed: " . $e->getMessage());
 }
 
-// echo "Connected successfully!";
+
 
 ?>

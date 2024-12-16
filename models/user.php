@@ -4,6 +4,7 @@
 
 class User{
     
+
     private $id;
     private $firstname;
     private $lastname;
@@ -61,7 +62,9 @@ class User{
         return $this->role;
     }
 
-    
+    public function getCreatedAt() {
+        return $this->created_at;
+    }
 
     // public function getPassword() {
     //     return $this->password;
@@ -80,20 +83,39 @@ class User{
         return self::$users;
     }
 
-    public static function getAllUsers(){
+    
+    public static function getAllUsers() {
+        // Prepare the SQL statement
         $stmt = self::$conn->prepare("SELECT * FROM users");
-        $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-        foreach ($users as $user) {
-            self::$users[$user['id']] = new User(
-                $user['id'],
-                $user['firstname'],
-                $user['lastname'],
-                $user['email'],
-                $user['role'],
-                $user['created_at']
-            );
+        
+        // Execute the statement
+        if (!$stmt->execute()) {
+            // Log or handle the error
+            throw new Exception("Failed to execute query: " . implode(", ", $stmt->errorInfo()));
         }
+    
+        // Fetch all users as an associative array
+        $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    
+        // Check if any users were returned
+        if (!$users) {
+            // Optionally, handle the case where no users are found
+            return;
+        }else{
+            foreach ($users as $user) {
+                self::$users[$user['id']] = new User(
+                    $user['id'],
+                    $user['firstname'],
+                    $user['lastname'],
+                    $user['email'],
+                    $user['role'],
+                    $user['created_at']
+                );
+            }
+            
+        }
+    
+        
     }
 }
 ?>

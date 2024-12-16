@@ -49,21 +49,29 @@ document.addEventListener("DOMContentLoaded", function () {
                 } 
             }); 
         });
-            // Add Contact Button Listener
+            // Contact Button Listener
             const addContactButton = document.getElementById('contbutton');
             if (addContactButton) {
                 addContactButton.addEventListener('click', function (e) {
                     e.preventDefault();
-                    fetchData('newContact.php'); // Load New Contact Form
+                    fetchData('newContact.php'); 
                 });
             }
-    
-            // Add New User Button Listener (if it exists)
+            // User button Listener
+            const addUserButton = document.getElementById('addUserBtn');
+            if (addUserButton) {
+                addUserButton.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    fetchData('add_user.php'); 
+                });
+            }
+
+            // New User Button Listener
             const newUserButton = document.getElementById('newUserButton');
             if (newUserButton) {
                 newUserButton.addEventListener('click', function (e) {
                     e.preventDefault();
-                    fetchData('/public/newUser.php'); // Load New User Form
+                    fetchData('/public/newUser.php');
                 });
             }
     

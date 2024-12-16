@@ -3,15 +3,15 @@ session_start();
 include_once '../includes/db.php';
 include_once '../models/contact.php';
 include_once '../models/user.php';
-use app\models\Contact;
-use app\models\User;
+// use models\Contact;
+// use models\User;
 
 Contact::setConnection($conn);
-//User::setConnection($conn);
-//User::loadUsers();
-//$users = User::getUsers();
+User::setConnection($conn);
+User::getAllUsers();
+$users = User::getUsers();
 
-$signupCheck = $_GET['signup'];
+//$signupCheck = $_GET['signup'];
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email = filter_input(INPUT_POST, "email", FILTER_VALIDATE_EMAIL);
@@ -70,10 +70,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>New user</title>
-    <link rel="stylesheet" href=".css">
+    <link rel="stylesheet" href="contact_style.css">
 </head>
 <body>
-<div class="main">
+<div class="form-body">
     <div class="right">
         <br><br>
         <h1>New Contact</h1><br>
@@ -139,7 +139,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         <select id="assignedTo" name="assignedTo" required>
                             <?php foreach ($users as $user): ?>
                                 <option value="<?php echo htmlspecialchars($user->getId()); ?>">
-                                    <?php echo htmlspecialchars($user->getFirstName()) . ' ' . htmlspecialchars($user->getLastName()); ?>
+                                    <?php echo htmlspecialchars($user->getFName()) . ' ' . htmlspecialchars($user->getLName()); ?>
                                 </option>
                             <?php endforeach; ?>
                         </select>
@@ -149,10 +149,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <!-- Save Button -->
                 <div class="info">
                     <div class="usercontent-buttonadd">
-                        <button type="submit">Save</button>
+                        <button type="submit" value="submit">Save</button>
                     </div>
                     <?php 
-                    if(isset($_GET['signup'])){
+                    if(!isset($_GET['signup'])){
                         exit();
                     }
                     else{
@@ -191,4 +191,3 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 </div>
 </body>
 </html>
-
