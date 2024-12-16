@@ -1,0 +1,67 @@
+body{
+  background-color: #edeaff;
+  justify-content: center;
+}
+
+.atkinson-hyperlegible-bold{
+  font-family: "Atkinson Hyperlegible", sans-serif;
+  font-size: 24px;
+  font-weight: 800;
+  font-style: normal;
+  text-align: center;
+  vertical-align: middle;
+  color: black;
+}
+
+h1{
+  font-family: "Atkinson Hyperlegible", sans-serif;
+  font-size: 32px;  
+  margin-top: 30px;
+}
+
+/* Buttons */
+.add-btn{
+  background-color: #27187E;
+  border: none;
+  color: white;
+  padding: 10px 15px;
+  text-align: center;
+  text-decoration: none;
+  font-family: "Inter", sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  margin: 5px 10px 5px 0px;
+  border-radius: 5px;
+  float: right;
+  transform: translateY(-140%);
+}
+
+.add-btn:hover{
+  background-color: #f5c412;
+  color: black;
+  transition: 0.3s;
+}
+
+thead{
+  background-color: #a295ec;
+}
+
+table, th,td {
+  border: thin, solid, rgb(208, 172, 255);
+  border-collapse: collapse;
+  padding: 12px;
+  border-radius: 2px;
+  margin-left: auto;
+  margin-right: auto;
+  font-family: "Cabin", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+  width: auto;
+}
+
+th{
+  font-family: "Atkinson Hyperlegible", sans-serif;
+  font-weight: 800;
+}
