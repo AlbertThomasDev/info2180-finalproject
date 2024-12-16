@@ -15,65 +15,43 @@ $users = User::getUsers();
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $title = filter_input(INPUT_POST, 'title', FILTER_SANITIZE_SPECIAL_CHARS);
-    $firstName = filter_input(INPUT_POST, "firstName", FILTER_SANITIZE_SPECIAL_CHARS);
-    $lastName = filter_input(INPUT_POST, "lastName", FILTER_SANITIZE_SPECIAL_CHARS);
-    $email = filter_input(INPUT_POST, "email", FILTER_VALIDATE_EMAIL);
-    $telephone = filter_input(INPUT_POST, "telephone", FILTER_SANITIZE_SPECIAL_CHARS);
-    $company = filter_input(INPUT_POST, "company", FILTER_SANITIZE_SPECIAL_CHARS);
-    $type = filter_input(INPUT_POST, "type", FILTER_SANITIZE_SPECIAL_CHARS);
-    $assigned_to = filter_input(INPUT_POST, "assigned_to", FILTER_SANITIZE_NUMBER_INT);
-    
-   
+    $firstName = filter_input(INPUT_POST, 'firstName', FILTER_SANITIZE_SPECIAL_CHARS);
+    $lastName = filter_input(INPUT_POST, 'lastName', FILTER_SANITIZE_SPECIAL_CHARS);
+    $email = filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL);
+    $telephone = filter_input(INPUT_POST, 'telephone', FILTER_SANITIZE_SPECIAL_CHARS);
+    $company = filter_input(INPUT_POST, 'company', FILTER_SANITIZE_SPECIAL_CHARS);
+    $type = filter_input(INPUT_POST, 'type', FILTER_SANITIZE_SPECIAL_CHARS);
+    $assigned_to = filter_input(INPUT_POST, 'assigned_to', FILTER_SANITIZE_NUMBER_INT);
 
-    $emailcheck = !Contact::emailCheck($email);
-    $telval = Contact::ValidateTelephone($telephone);
-    $telephoneDoesntExist = !Contact::telcheck($telephone);
+    $emailCheck = !Contact::emailCheck($email);
+    $telVal = Contact::ValidateTelephone($telephone);
+    $telephoneCheck = !Contact::telcheck($telephone);
 
-    /*if($title && $firstName && $lastName && $email && $telephone && $company && $type && $assignedTo) {
-        if(!Contact::emailCheck($email) && !Contact::telcheck($telephone) && $telval){
-            Contact::addContact($title, $firstName, $lastName, $email, $telephone, $company, $type, $assignedTo, $_SESSION['user_id']);
-*/
-
-    if($title && $firstName && $lastName && $email && $telephone && $company && $type && $assigned_to) {
-        if(empty($title)||empty($firstName)||empty($lastName)||empty($email)||empty($telephone)||empty($company)||empty($type)||empty($assignedTo)){
-            header("Location: ../newContact.php?signup=empty");
+    if (!$title || !$firstName || !$lastName || !$email || !$telephone || !$company || !$type || !$assigned_to) {
+        header("Location: newContact.php?signup=empty");
+        exit();
+    } elseif (!$email) {
+        header("Location: newContact.php?signup=email");
+        exit();
+    } elseif (!$telVal) {
+        header("Location: newContact.php?signup=telval");
+        exit();
+    } elseif (!$telephoneCheck) {
+        header("Location: newContact.php?signup=telexist");
+        exit();
+    } elseif (!$emailCheck) {
+        header("Location: newContact.php?signup=emailexist");
+        exit();
+    } else {
+        if (Contact::addcontact($title, $firstName, $lastName, $email, $telephone, $company, $type, $assigned_to, $_SESSION['user_id'])) {
+            header("Location: newContact.php?signup=success");
             exit();
+        } else {
+            echo "<p class='error'>Error saving contact. Please try again.</p>";
         }
-        else{
-            if(!filter_var($email,FILTER_VALIDATE_EMAIL)){
-                header("Location: newContact.php?signup=email");
-                exit();
-            }
-            else{
-                if(!$telval){
-                    header("Location: newContact.php?signup=telval");
-                    exit();
-                }
-                else{
-                    if(!$telephoneDoesntExist){
-                    header("Location: newContact.php?signup=telexist");
-                    exit();
-                    }
-                    else{
-                        if(!$emailcheck){
-                        header("Location: newContact.php?signup=emailexist");
-                        exit(); 
-                        }
-                        else{
-                        $result = Contact::addContact($title, $firstName, $lastName, $email, $telephone, $company, $type, $assigned_to, $_SESSION['user_id']);
-                        if($result){
-                        header("Location: newContact.php?signup=success");
-                        exit();
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-
+    }
 }
-}
+
 ?>
 
 <!DOCTYPE html>
