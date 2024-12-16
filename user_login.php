@@ -1,8 +1,8 @@
 <?php
 session_start();
-require_once '../includes/db.php';
-require_once '../models/user.php';
-use PDO;
+require_once 'includes/db.php';
+require_once 'models/user.php';
+//use PDO;
 use models\User;
 
 

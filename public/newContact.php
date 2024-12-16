@@ -14,45 +14,57 @@ $users = User::getUsers();
 //$signupCheck = $_GET['signup'];
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $title = filter_input(INPUT_POST, 'title', FILTER_SANITIZE_SPECIAL_CHARS);
+    $firstName = filter_input(INPUT_POST, "firstName", FILTER_SANITIZE_SPECIAL_CHARS);
+    $lastName = filter_input(INPUT_POST, "lastName", FILTER_SANITIZE_SPECIAL_CHARS);
     $email = filter_input(INPUT_POST, "email", FILTER_VALIDATE_EMAIL);
-    $assignedTo = filter_input(INPUT_POST, "assignedTo", FILTER_SANITIZE_NUMBER_INT);
+    $telephone = filter_input(INPUT_POST, "telephone", FILTER_SANITIZE_SPECIAL_CHARS);
+    $company = filter_input(INPUT_POST, "company", FILTER_SANITIZE_SPECIAL_CHARS);
+    $type = filter_input(INPUT_POST, "type", FILTER_SANITIZE_SPECIAL_CHARS);
+    $assigned_to = filter_input(INPUT_POST, "assigned_to", FILTER_SANITIZE_NUMBER_INT);
+    
+   
 
     $emailcheck = !Contact::emailCheck($email);
     $telval = Contact::ValidateTelephone($telephone);
+    $telephoneDoesntExist = !Contact::telcheck($telephone);
 
     /*if($title && $firstName && $lastName && $email && $telephone && $company && $type && $assignedTo) {
         if(!Contact::emailCheck($email) && !Contact::telcheck($telephone) && $telval){
             Contact::addContact($title, $firstName, $lastName, $email, $telephone, $company, $type, $assignedTo, $_SESSION['user_id']);
 */
 
-    if($title && $firstName && $lastName && $email && $telephone && $company && $type && $assignedTo) {
+    if($title && $firstName && $lastName && $email && $telephone && $company && $type && $assigned_to) {
         if(empty($title)||empty($firstName)||empty($lastName)||empty($email)||empty($telephone)||empty($company)||empty($type)||empty($assignedTo)){
             header("Location: ../newContact.php?signup=empty");
             exit();
         }
         else{
             if(!filter_var($email,FILTER_VALIDATE_EMAIL)){
-                header("Location: ../newContact.php?signup=email");
+                header("Location: newContact.php?signup=email");
                 exit();
             }
             else{
                 if(!$telval){
-                    header("Location: ../newContact.php?signup=telval");
+                    header("Location: newContact.php?signup=telval");
                     exit();
                 }
                 else{
                     if(!$telephoneDoesntExist){
-                    header("Location: ../newContact.php?signup=telexist");
+                    header("Location: newContact.php?signup=telexist");
                     exit();
                     }
                     else{
                         if(!$emailcheck){
-                        header("Location: ../newContact.php?signup=emailexist");
+                        header("Location: newContact.php?signup=emailexist");
                         exit(); 
                         }
                         else{
-                        header("Location: ../newContact.php?signup=success");
+                        $result = Contact::addContact($title, $firstName, $lastName, $email, $telephone, $company, $type, $assigned_to, $_SESSION['user_id']);
+                        if($result){
+                        header("Location: newContact.php?signup=success");
                         exit();
+                            }
                         }
                     }
                 }
@@ -113,7 +125,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     </div>
                     <div class="usercontent">
                         <label for="telephone">Telephone</label>
-                        <input type="text" id="telephone" name="telephone" placeholder="Enter Telephone" required>
+                        <input type="text" id="telephone" name="telephone" placeholder="Tel: (123)-456-7890 or 456-7890" required>
                     </div>
                 </div>
 
@@ -135,8 +147,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <!-- Assigned To -->
                 <div class="info assigned-row">
                     <div class="usercontent">
-                        <label for="assignedTo">Assigned To</label>
-                        <select id="assignedTo" name="assignedTo" required>
+                        <label for="assigned_to">Assigned To</label>
+                        <select id="assigned_to" name="assigned_to" required>
                             <?php foreach ($users as $user): ?>
                                 <option value="<?php echo htmlspecialchars($user->getId()); ?>">
                                     <?php echo htmlspecialchars($user->getFName()) . ' ' . htmlspecialchars($user->getLName()); ?>
@@ -160,27 +172,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
                         if($signupCheck == 'empty'){
                             echo "<p class='error'>You did not fill in all the fields.</p>";
-                            exit();
                         }
                         elseif($signupCheck == 'email'){
                             echo "<p class='error'>You entered an Invalid email.</p>";
-                            exit();
                         }
                         elseif($signupCheck == 'telval'){
                             echo "<p class='error'>Incorrect telephone format.</p>";
-                            exit();
                         }
                         elseif($signupCheck == 'telexist'){
                             echo "<p class='error'>Someone with this number already exists.</p>";
-                            exit();
                         }
                         elseif($signupCheck == 'emailexist'){
                             echo "<p class='error'>Someone with this email already exists.</p>";
-                            exit();
                         }
                         if($signupCheck == 'success'){
                             echo "<p class='success'>Contact Created!</p>";
-                            exit();
                         }
                     }
                     ?>

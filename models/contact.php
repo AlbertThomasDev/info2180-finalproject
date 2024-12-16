@@ -160,11 +160,10 @@ class Contact {
     }
 
 
-    public static function addcontact($title, $firstname, $lastname, $email, $telephone, $company, $type, $assigned_to, $created_by) {
+    public static function addcontact($title, $firstname, $lastname, $email, $telephone, $company, $type, $assigned_to, $created_by){
         try {
             // Prepare the SQL statement
-            $prep_stmt = self::$conn->prepare("INSERT INTO Contacts 
-                (title, firstname, lastname, email, telephone, company, type, assigned_to, created_by, created_at, updated_at) 
+            $prep_stmt = self::$conn->prepare("INSERT INTO Contacts (title, firstname, lastname, email, telephone, company, type, assigned_to, created_by, created_at, updated_at) 
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW())");
     
             // Bind values to the placeholders
@@ -177,6 +176,8 @@ class Contact {
             $prep_stmt->bindParam(7, $type, PDO::PARAM_STR);
             $prep_stmt->bindParam(8, $assigned_to, PDO::PARAM_INT);
             $prep_stmt->bindParam(9, $created_by, PDO::PARAM_INT);
+
+
     
             // Execute the statement
             if ($prep_stmt->execute()) {
@@ -196,8 +197,8 @@ class Contact {
 
     
     public static function emailCheck($email):bool {
-        $stmt = self::$conn->prepare("SELECT * FROM contacts WHERE email = ?");
-        $stmt->bindParam('s',$email,PDO::PARAM_STR);
+        $stmt = self::$conn->prepare("SELECT * FROM Contacts WHERE email = ?");
+        $stmt->bindParam(1,$email,PDO::PARAM_STR);
         $stmt->execute();
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -205,8 +206,8 @@ class Contact {
     }
 
     public static function telcheck($telephone):bool {
-        $stmt = self::$conn->prepare("SELECT * FROM contacts WHERE telephone = ?");
-        $stmt->bindParam('s',$telephone,PDO::PARAM_STR);
+        $stmt = self::$conn->prepare("SELECT * FROM Contacts WHERE telephone = ?");
+        $stmt->bindParam(1,$telephone,PDO::PARAM_STR);
         $stmt->execute();
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
