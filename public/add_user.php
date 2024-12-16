@@ -73,37 +73,40 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <h2>Add User</h2>
         <form method="POST" action="add_user.php">
             
-            <div class="form-group">
+        <div class="info">
+            <div class="form-a">
                 <label for="first-name">First Name</label>
                 <input type="text" id="first-name" name="first-name" required placeholder=" Jane">
             </div>
-
-            <div class="form-group">
+            <div class="form-b">
                 <label for="last-name">Last Name</label>
                 <input type="text" id="last-name" name="last-name" required placeholder=" Smith">
             </div>
+        </div>
         
-            <div class="form-group">
+        <div class="info">
+            <div class="form-a">
                 <label for="email">Email</label>
                 <input type="email" id="email" name="email" required placeholder=" Email Address">
             </div>
-
-            <div class="form-group">
+    
+            <div class="form-b">
                 <label for="password">Password</label>
                 <input type="password" id="password" name="password" required>
             </div>
+        </div>
+        
+        <div class="formselect">
+            <label for="role">Role</label>
+            <select id="role" name="role" required>
+                <option value="Member">Member</option>
+                <option value="Admin">Admin</option>
+            </select>
+        </div>
 
-            <div class="form-group">
-                <label for="role">Role</label>
-                <select id="role" name="role" required>
-                    <option value="Member">Member</option>
-                    <option value="Admin">Admin</option>
-                </select>
-            </div>
-
-            <div class="form-group">
-                <button type="submit">Submit</button>
-            </div>
+        <div class="form-group">
+            <button type="submit">Login</button>
+        </div>
             
             <?php if (isset($error)) { ?>
                 <div class="error-message">
