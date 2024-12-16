@@ -1,7 +1,7 @@
 CREATE DATABASE IF NOT EXISTS dolphin_crm;
 USE dolphin_crm;
 
---USER TABLE
+
 CREATE TABLE IF NOT EXISTS Users (
     id INT AUTO_INCREMENT PRIMARY KEY,
     firstname VARCHAR(500),
@@ -12,7 +12,7 @@ CREATE TABLE IF NOT EXISTS Users (
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP 
 );
 
---CONTACTS TABLE
+
 CREATE TABLE IF NOT EXISTS Contacts (
     id INT AUTO_INCREMENT PRIMARY KEY,
     title VARCHAR(100),
@@ -28,7 +28,7 @@ CREATE TABLE IF NOT EXISTS Contacts (
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
---NOTES TABLE
+
 CREATE TABLE IF NOT EXISTS Notes (
     id INT AUTO_INCREMENT PRIMARY KEY,
     contact_id INT NOT NULL,
@@ -39,7 +39,7 @@ CREATE TABLE IF NOT EXISTS Notes (
     FOREIGN KEY (created_by) REFERENCES Users(id) ON DELETE CASCADE
 );
 
---ADD USER
+
 INSERT INTO Users (firstname, lastname, password, email, role, created_at)
 VALUES (
     'Admin', 

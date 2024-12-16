@@ -1,0 +1,80 @@
+body{
+  background-color: #d6cffd;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+}
+
+form{
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+h1{
+  font-family: "Atkinson Hyperlegible", sans-serif;
+  font-size: 32px;
+  text-align: center;
+  margin: 0;
+}
+
+.form-body {
+  width: 80%;
+  max-width: 600px;
+  background: #fff;
+  padding: 20px 30px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+}
+
+input[type=text], select {
+  width: 75%;
+  padding: 8px;
+  background-color: #ffffff;
+  border-radius: 4px;
+  border: none;
+  margin-top: 5px;
+  margin-bottom: 10px;
+  margin-right: 13px;
+  border: 1px solid #27187E;
+}
+
+.info {
+  display: flex;
+  gap: 15px;
+}
+
+.usercontent {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.usercontentadd {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+label{
+  font-family: "Open Sans", "Inter", sans-serif;;
+  color: #222725;
+  font-weight: bold;
+}
+
+button[type=submit] {
+  background-color: #27187E;
+  color: #fff;
+  padding: 10px 10px;
+  border: none;
+  border-radius: 8px;
+  text-align: center;
+  font-family: "Open Sans", "Inter", sans-serif; 
+  cursor: pointer;
+}
+
+button[type=submit]:hover {
+  background-color: #f5c412;
+  color:#222725;
+  transition: 0.1s;
+}

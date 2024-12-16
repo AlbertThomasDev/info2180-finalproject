@@ -1,0 +1,129 @@
+body{
+  background-color: #edeaff;
+}
+.sidenav {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  position: fixed;
+  width: 200px;
+  top: 0;
+  left: 0;
+  background-color: #008bfd;
+  overflow-x: hidden;
+  padding-top: 20px;
+}
+
+.sidenav li{
+  list-style-type: none;
+}
+
+.sidenav a{
+  display: flex;
+  color: #F6F5E8;
+  text-decoration: none;
+  align-items: center;
+  font-size: 14px;
+  font-family: "Open Sans", "Inter", sans-serif;
+  font-weight: 600;
+  margin-top: 20px;
+  margin-left: 0;
+  margin-bottom: 20px;
+}
+
+.atkinson-hyperlegible-bold{
+  font-family: "Atkinson Hyperlegible", sans-serif;
+  font-size: 24px;
+  font-weight: 800;
+  font-style: normal;
+  text-align: center;
+  vertical-align: middle;
+  color: black;
+}
+
+/* Buttons */
+.filter-btn{
+  background-color: #27187E;
+  border: none;
+  color: white;
+  padding: 10px 15px;
+  text-align: center;
+  text-decoration: none;
+  font-family: "Inter", sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  margin: 5px 10px 5px 0px;
+  border-radius: 5px;
+}
+.contact-btn{
+  background-color: #27187E;
+  border: none;
+  color: white;
+  padding: 10px 15px;
+  text-align: center;
+  text-decoration: none;
+  font-family: "Inter", sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  margin: 5px 10px 5px 0px;
+  border-radius: 5px;
+  float: right;
+  transform: translateY(-125%);
+}
+
+.contact-btn:hover, .filter-btn:hover{
+  background-color: #f5c412;
+  color: black;
+  transition: 0.3s;
+}
+
+section{
+  flex-grow: 1;
+  margin-left: 190px;
+  margin-top: 0px;
+  padding: 10px;
+}
+
+thead{
+  background-color: #a295ec;
+}
+.table{
+  padding: 10px;
+}
+.dashboard-header{
+  margin: 0;
+  padding: 20px;
+}
+.dashboard-header h1{
+  font-family: "Atkinson Hyperlegible", sans-serif;
+  font-size: 32px;
+  font-weight: 800;
+  margin: 0;
+}
+
+.filter-by{
+  margin: 0;
+  padding: 20px;  
+}
+
+
+table, th,td {
+  border: thin, solid, rgb(208, 172, 255);
+  border-collapse: collapse;
+  padding: 12px;
+  border-radius: 2px;
+  margin-left: auto;
+  margin-right: auto;
+  font-family: "Cabin", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+  width: 100%;
+}
+
+th{
+  font-family: "Atkinson Hyperlegible", sans-serif;
+  font-weight: 800;
+}
