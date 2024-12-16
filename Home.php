@@ -26,13 +26,13 @@ if (isset($_SESSION['user_id'])):
 <nav class="sidenav">
   <ul>
     <!-- got to add in icons -->
-    <li><a class="side" data-target="Home.php"><span class="material-symbols-outlined">&#xe88a;</span>Home</a></li>
-    <li><a class="side" data-target="newContact.php" id="contbutton"><span class="material-symbols-outlined">&#xe853;</span>New Contact</a></li>
+    <li><a data-target="Home.php"><span class="material-symbols-outlined">&#xe88a;</span>Home</a></li>
+    <li><a data-target="newContact.php" id="contbutton"><span class="material-symbols-outlined">&#xe853;</span>New Contact</a></li>
     <?php if($_SESSION['role'] === 'admin') { ?>
-      <li><a class="side" data-target="add_user.php"><span class="material-symbols-outlined">&#xe7ef;</span>Users</a></li>
+      <li><a data-target="add_user.php"><span class="material-symbols-outlined">&#xe7ef;</span>Users</a></li>
     <?php } ?>
     <hr>
-    <li><a class="side" data-target="logout.php"><span class="material-symbols-outlined">&#xe9ba;</span>Logout</a></li>
+    <li><a data-target="logout.php"><span class="material-symbols-outlined">&#xe9ba;</span>Logout</a></li>
   </ul>
 </nav>
 <section id="view">
