@@ -1,6 +1,12 @@
 <?php
 session_start();
-// require_once 'models/user.php';
+include_once '../models/contact.php';
+use models\Contact;
+Contact::setConnection($conn);
+
+Contact::getAllcontacts();
+$contacts = Contact::getContacts();
+
 
 
 if (isset($_SESSION['user_id'])):
@@ -26,13 +32,13 @@ if (isset($_SESSION['user_id'])):
 <nav class="sidenav">
   <ul>
     <!-- got to add in icons -->
-    <li><a class="side" data-target="Home.php"><span class="material-symbols-outlined">&#xe88a;</span>Home</a></li>
+    <li><a class="side" id="homebutton1" data-target="Home.php"><span class="material-symbols-outlined">&#xe88a;</span>Home</a></li>
     <li><a class="side" data-target="newContact.php" id="contbutton"><span class="material-symbols-outlined">&#xe853;</span>New Contact</a></li>
     <?php if($_SESSION['role'] === 'admin') { ?>
       <li><a class="side" data-target="view_users.php"><span class="material-symbols-outlined">&#xe7ef;</span>Users</a></li>
     <?php } ?>
     <hr>
-    <li><a class="side" data-target="logout.php"><span class="material-symbols-outlined">&#xe9ba;</span>Logout</a></li>
+    <li><a class="side" id="logout" data-target="logout.php"><span class="material-symbols-outlined">&#xe9ba;</span>Logout</a></li>
   </ul>
 </nav>
 <section id="view">
@@ -40,7 +46,7 @@ if (isset($_SESSION['user_id'])):
         <div class="dashboard-header">
             <h1>Dashboard<h1>
 
-            <button class="contact-btn" id="addContactButton">
+            <button class="contact-btn" id="button-ad" data-target="newContact.php">
               <span class="material-symbols-outlined">&#xe145;</span> Add Contact
             </button>
         </div>
@@ -62,18 +68,41 @@ if (isset($_SESSION['user_id'])):
             </tr>
           </thead>  
           <tbody>
-
+          <?php if (!empty($contacts)): ?>
+                    <?php foreach ($contacts as $contact): ?>
+                        <tr
+                            data-type="<?php echo htmlspecialchars(strtolower($contact->getType())); ?>"
+                            data-assigned-to="<?php echo htmlspecialchars($contact->getAssignedTo()); ?>"
+                           data-user-id="<?php echo $_SESSION['user_id']; ?>"
+                        >
+                        <td class="name"><?php echo htmlspecialchars($contact->getTitle()) . '. ' . htmlspecialchars($contact->getFirstName()) . ' ' . htmlspecialchars($contact->getLastName()); ?></td>
+                            <td><?php echo htmlspecialchars($contact->getEmail()); ?></td>
+                            <td><?php echo htmlspecialchars($contact->getCompany()); ?></td>
+                            <td class="contactType">
+                                <?php if (strtolower($contact->getType()) === 'support'): ?>
+                                    <span class="support-btn">SUPPORT</span>
+                                <?php else: ?>
+                                    <span class="sales-lead-btn">SALES LEAD</span>
+                                <?php endif; ?>
+                            </td>
+                            <td><a class="view-link" data-target="contactNotes.php?id=<?php echo htmlspecialchars($contact->getId()); ?>">View</a></td>
+                        </tr>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <tr>
+                        <td class= "name"></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                <?php endif; ?>
             <!--This is for the php stuff here, using contacts -->
-
-
           </tbody>
       
     </div>
 </section>
-    
-
-        
-
 </body>
 </html>
 <?php endif; ?>
+

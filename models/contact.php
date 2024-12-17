@@ -113,6 +113,53 @@ class Contact {
         return preg_match("/^\(\d{3}\)-\d{3}-\d{4}$|^\d{3}-\d{4}$/", $telephone);
     }
 
+    public static function getContacts(): array
+    {
+        return self::$contacts;
+    }
+
+    public static function getContactById($id) {
+        if (isset(self::$contacts[$id])) {
+            return self::$contacts[$id];
+        }
+
+        return null;
+    }
+
+    // public static function getContactBySalesLead(): array {
+    //     $stmt = self::$conn->prepare("SELECT  FROM contacts");
+    //     $stmt -> execute();
+    //     $Contacts = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    //     $contacts = 
+    // }
+
+    private static function clearContacts() {
+        self::$contacts = [];
+    }
+
+    public static function getAllcontacts(){
+        $stmt = self::$conn->prepare("SELECT * FROM contacts");
+        $stmt -> execute();
+        $Contacts = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        foreach ($Contacts as $contact) {
+            self::$contacts[$contact['id']] = new Contact(
+                $contact['id'],
+                $contact['title'],
+                $contact['firstname'],
+                $contact['lastname'],
+                $contact['email'],
+                $contact['telephone'],
+                $contact['company'],
+                $contact['type'],
+                $contact['assigned_to'],
+                $contact['created_by'],
+                $contact['created_at'],
+                $contact['updated_at']
+            );
+        }
+    }
+
     public static function addcontact($title, $firstname, $lastname, $email, $telephone, $company, $type, $assigned_to, $created_by): bool {
         try {
             $stmt = self::$conn->prepare("

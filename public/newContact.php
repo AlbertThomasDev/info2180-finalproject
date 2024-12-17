@@ -44,7 +44,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         exit();
     } else {
         if (Contact::addcontact($title, $firstName, $lastName, $email, $telephone, $company, $type, $assigned_to, $_SESSION['user_id'])) {
-            header("Location: newContact.php?signup=success");
+            header("Location: Home.php?signup=success");
             exit();
         } else {
             echo "<p class='error'>Error saving contact. Please try again.</p>";
