@@ -39,6 +39,76 @@ class Contact {
         self::$conn = $conn;
     }
 
+    public static function contactExists($id): bool{
+        return isset(self::$contacts[$id]);
+    }
+
+    public function getId() {
+        return $this->id;
+    }
+
+    public function getTitle() {
+        return $this->title;
+    }
+
+    public function getFirstName() {
+        return $this->firstname;
+    }
+
+    public function getLastName() {
+        return $this->lastname;
+    }
+
+    public function getEmail() {
+        return $this->email;
+    }
+
+    public function getTelephone() {
+        return $this->telephone;
+    }
+
+    public function getCompany() {
+        return $this->company;
+    }
+
+    public function getType() {
+        return $this->type;
+    }
+
+    public function setType($type):void{
+        $this->type = $type;
+    }
+
+    public function getAssignedTo() {
+        return $this->assigned_to;
+    }
+
+    public function setAssignedTo($assigned_to):void{
+        $this->assigned_to = $assigned_to;
+    }
+
+    public function getCreatedBy() {
+        return $this->created_by;
+    }
+
+    public function getCreatedAt() {
+        return $this->created_at;
+    }
+
+    public function getUpdatedAt() {
+        return $this->updated_at;
+    }
+
+    public function setCreatedat():string{
+        $time = strtotime($this->getCreatedAt());
+        return date('F j, Y', $time);
+    }
+
+    public function setUpdateat():string{
+        $time = strtotime($this->getUpdatedAt());
+        return date('F j, Y', $time);
+    }
+
     public static function ValidateTelephone($telephone): bool {
         return preg_match("/^\(\d{3}\)-\d{3}-\d{4}$|^\d{3}-\d{4}$/", $telephone);
     }
