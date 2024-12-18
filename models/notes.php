@@ -70,15 +70,13 @@ class Notes{
         return null;
     }
 
-    public static function loadNotes() {
-        $query = "SELECT * FROM Notes";
-        $result = mysqli_query(self::$conn, $query);
-        self::clearNotes();
+    public static function getAllNotes() {
+        $stmt = self::$conn->prepare("SELECT * FROM Notes");
+        $stmt -> execute();
+        $Notes = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        if (mysqli_num_rows($result) > 0) {
-            $fetchedNotes = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
-            foreach ($fetchedNotes as $note) {
+            foreach ($Notes as $note) {
                 new Notes ($note['id'],
                     $note['contact_id'],
                     $note['comment'],
@@ -87,49 +85,50 @@ class Notes{
                 );
             }
         }
-    }
+    
 
     public static function addNote($contact_id, $comment, $created_by):bool {
-        $query = "INSERT INTO Notes (contact_id, comment, created_by, created_at) VALUES (?, ?, ?, NOW())";
-        $stmt = mysqli_prepare(self::$conn, $query);
-        mysqli_stmt_bind_param($stmt, 'isi', $contact_id, $comment, $created_by);
+        try{
+        $stmt = self::$conn->prepare("
+        INSERT INTO Notes (contact_id, comment, created_by, created_at) VALUES (:contact_id, :comment, :created_by, :created_at)");
+        $created_at = date('Y-m-d H:i:s');
 
-        if (mysqli_stmt_execute($stmt)) {
-            new Notes(
-                mysqli_insert_id(self::$conn),
-                $contact_id,
-                $comment,
-                $created_by,
-                date('Y-m-d H:i:s')
-            );
-
-            return true;
-        }
-
+        $stmt->execute([
+            ':contact_id'=> $contact_id,
+            ':comment'=> $comment,
+            ':created_by'=>$created_by,
+            ':created_at'=>$created_at
+        ]);
+        return true;     
+    }catch (PDOException $e){
+        error_log("Database Error: " . $e->getMessage());
         return false;
     }
+}
 
-    public static function getNotesByContactId($contact_id): array{
-        $query = "SELECT * FROM Notes WHERE contact_id = ?";
-        $stmt = mysqli_prepare(self::$conn, $query);
-        mysqli_stmt_bind_param($stmt, 'i', $contact_id);
-        mysqli_stmt_execute($stmt);
-        $result = mysqli_stmt_get_result($stmt);
 
-        $notes = [];
-        while ($note = mysqli_fetch_assoc($result)) {
-            $newNote =  new Notes ($note['id'],
-                        $note['contact_id'],
-                        $note['comment'],
-                        $note['created_by'],
-                        $note['created_at']
-                    );
+    // public static function getNotesByContactId($contact_id): array{
+    //     $stmt = self::$conn->prepare("SELECT * FROM Notes WHERE contact_id = ?");
+    //     $stmt-> execute();
+    //     $Notes =
+    //     mysqli_stmt_bind_param($stmt, 'i', $contact_id);
+    //     mysqli_stmt_execute($stmt);
+    //     $result = mysqli_stmt_get_result($stmt);
 
-            $notes[$newNote->getId()] = $newNote;
-        }
+    //     $notes = [];
+    //     while ($note = mysqli_fetch_assoc($result)) {
+    //         $newNote =  new Notes ($note['id'],
+    //                     $note['contact_id'],
+    //                     $note['comment'],
+    //                     $note['created_by'],
+    //                     $note['created_at']
+    //                 );
 
-        return $notes;
-    }
+    //         $notes[$newNote->getId()] = $newNote;
+    //     }
+
+    //     return $notes;
+    // }
 
 }
 

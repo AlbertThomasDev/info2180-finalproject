@@ -46,6 +46,6 @@ VALUES (
     'First_User', 
     '$2y$10$/hxj/.zLNpIuwahEyaHRXOu1dVkfFE1pLGLw1t3A8ko5bG.akhmh.', -- should check
     'admin@project2.com', 
-    'admin', 
+    'Admin', 
     NOW()
 );

@@ -3,6 +3,8 @@ document.addEventListener("DOMContentLoaded", function () {
     var result = document.getElementById("view");
     const filterlinks = document.querySelectorAll('.filter-btn');
     const tableRows = document.querySelectorAll('table tbody tr');
+    
+    
 
     // sidenavLinks.forEach(link => {
     //     link.addEventListener('click', function (e) {
@@ -136,15 +138,57 @@ document.addEventListener("DOMContentLoaded", function () {
                 });
             }
 
+            //View Contact Button Listener
+            //  const viewContactButton = document.querySelectorAll('view-link');
+            //  if (viewContactButton) {
+            //      viewContactButton.addEventListener('click', function (e) {
+            //          e.preventDefault();
+            //          fetchData('viewcontactdetails.php'); 
+            //      });
+            //  }
+
+            const viewLinks = document.querySelectorAll('.view-link'); 
+            viewLinks.forEach(link => { 
+                link.addEventListener('click', function (e) { 
+                    e.preventDefault(); 
+                    const target = this.getAttribute('data-target'); 
+                    fetchData(target); 
+                }); 
+            });
+
+            const contactdetailLinks = document.querySelectorAll('.contdet'); 
+            contactdetailLinks.forEach(link => { 
+                link.addEventListener('click', function (e) { 
+                    e.preventDefault(); 
+                    const target = this.getAttribute('data'); 
+                    fetchData(target); 
+                }); 
+            });
+  
+
+            // const assignToMeButton = document.getElementsByClassName(".assignbutton"); 
+            // if(assignToMeButton){
+            //     assignToMeButton.addEventListener('click', function (e) {
+            //         e.preventDefault();
+            //         //empty
+
+                    
+
+            //     });
+            // }
 
             console.log("Dynamic listeners initialized.");
         }
+
+        
     // Contact Button Listener
     
 
         // Initialize listeners on page load (for any existing content)
         initializeDynamicListeners();
     });
+
+    
 
 
 

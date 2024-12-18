@@ -118,20 +118,58 @@ class Contact {
         return self::$contacts;
     }
 
-    public static function getContactById($id) {
-        if (isset(self::$contacts[$id])) {
-            return self::$contacts[$id];
-        }
-
-        return null;
-    }
-
-    // public static function getContactBySalesLead(): array {
-    //     $stmt = self::$conn->prepare("SELECT  FROM contacts");
-    //     $stmt -> execute();
-    //     $Contacts = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    //     $contacts = 
+    // public static function getContactById($id) {
+    //     if ($id == $_GET['id']) {
+    //         return self::$contacts[$id];
+    //     }
+    //     return null;
     // }
+
+    public static function getContactById($id) {
+        try {
+            $stmt = self::$conn->prepare("SELECT * FROM Contacts WHERE id = :id");
+    
+            // Bind the parameter to the placeholder
+            $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+    
+            // Execute the query
+            $stmt->execute();
+    
+            // Debug SQL errors
+            if ($stmt->errorCode() !== '00000') {
+                var_dump($stmt->errorInfo());
+                return null;
+            }
+    
+            // Fetch the result as an associative array
+            $contact = $stmt->fetch(PDO::FETCH_ASSOC);
+    
+            if ($contact) {
+                return new Contact(
+                    $contact['id'],
+                    $contact['title'],
+                    $contact['firstname'],
+                    $contact['lastname'],
+                    $contact['email'],
+                    $contact['telephone'],
+                    $contact['company'],
+                    $contact['type'],
+                    $contact['assigned_to'],
+                    $contact['created_by'],
+                    $contact['created_at'],
+                    $contact['updated_at']
+                );
+            }
+    
+            // No contact found
+            echo "No contact found with ID: " . htmlspecialchars($id);
+            return null;
+    
+        } catch (PDOException $e) {
+            echo "Database Error: " . $e->getMessage();
+            return null;
+        }
+    }
 
     private static function clearContacts() {
         self::$contacts = [];
@@ -202,5 +240,45 @@ class Contact {
         $stmt->execute([':telephone' => $telephone]);
         return $stmt->fetch() !== false;
     }
+
+    public function update($type, $assigned_to): bool {
+        $this->setType($type);
+        $this->setAssignedTo($assigned_to);
+        $id = $this->getId();
+    
+        try {
+            $stmt = self::$conn->prepare(
+                "UPDATE Contacts SET type = :type, assigned_to = :assigned_to, updated_at = NOW() WHERE id = :id"
+            );
+    
+            $stmt->bindParam(':type', $type, PDO::PARAM_STR);
+            $stmt->bindParam(':assigned_to', $assigned_to, PDO::PARAM_STR);
+            $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+    
+            return $stmt->execute();
+        } catch (PDOException $e) {
+            // Handle the exception as needed, e.g., log the error or rethrow it
+            error_log('Update failed: ' . $e->getMessage());
+            return false;
+        }
+    }
+    
+
+    public static function updateContact($id, $assigned_to): bool {
+        try {
+            $query = "UPDATE Contacts SET assigned_to = :assigned_to, updated_at = NOW() WHERE id = :id";
+            $stmt = self::$conn->prepare($query);
+    
+            $stmt->bindParam(':assigned_to', $assigned_to, PDO::PARAM_INT);
+            $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+    
+            return $stmt->execute();
+        } catch (PDOException $e) {
+            error_log('Update failed: ' . $e->getMessage());
+            return false;
+        }
+    }
+
+    
 }
 ?>

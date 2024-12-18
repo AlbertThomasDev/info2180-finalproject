@@ -27,8 +27,14 @@ body{
   font-family: "Open Sans", "Inter", sans-serif;
   font-weight: 600;
   margin-top: 20px;
-  margin-left: 0;
-  margin-bottom: 20px;
+  padding: 10px;
+  cursor: pointer;
+}
+
+.sidenav a:hover{
+  color:#27187E;
+  font-size: 20px;
+  cursor: pointer;
 }
 
 .atkinson-hyperlegible-bold{
@@ -91,6 +97,7 @@ thead{
 }
 .table{
   padding: 10px;
+  width: 100%;
 }
 .dashboard-header{
   margin: 0;
@@ -108,22 +115,65 @@ thead{
   padding: 20px;  
 }
 
+hr{
+  width: 90%;
+}
 
-table, th,td {
-  border: thin, solid, rgb(208, 172, 255);
-  border-collapse: collapse;
+th,td{
   padding: 12px;
-  border-radius: 2px;
   margin-left: auto;
   margin-right: auto;
   font-family: "Cabin", sans-serif;
   font-optical-sizing: auto;
   font-weight: 400;
   font-style: normal;
-  width: auto;
+  border-bottom: 2px, solid, black;
 }
 
 th{
   font-family: "Atkinson Hyperlegible", sans-serif;
   font-weight: 800;
+}
+
+table{
+  border-collapse: collapse;
+  padding: 12px;
+  border-radius: 20px;
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  font-family: "Cabin", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+  text-align: left;
+}
+
+.tablecontainer{
+  padding: 10px 15px;
+  border: 1px solid white;
+  border-radius: 10px;
+  background-color:white;
+}
+
+.view-link:hover{
+  color:#6b55ea;
+  cursor: pointer;
+}
+
+.support-btn{
+  background-color:lightgreen;
+  border-radius:4px;
+  padding: 5px 10px;
+  justify-content: center;
+}
+
+.sales-lead-btn{
+  background-color: #f5c412;
+  border-radius:4px;
+  padding: 5px 10px;
+  justify-content: center;
+}
+.contactType{
+  justify-content: center;
 }

@@ -3,6 +3,10 @@ body{
   justify-content: center;
   align-items: center;
   display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: auto;
+  margin: 0;
 }
 
 form{
@@ -25,6 +29,7 @@ h1{
   padding: 20px 30px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   border-radius: 10px;
+  margin-top: 10%;
 }
 
 input[type=text], select {
