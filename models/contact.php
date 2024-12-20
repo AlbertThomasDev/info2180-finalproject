@@ -241,18 +241,16 @@ class Contact {
         return $stmt->fetch() !== false;
     }
 
-    public function update($type, $assigned_to): bool {
+    public function updateType($id, $type): bool {
         $this->setType($type);
-        $this->setAssignedTo($assigned_to);
-        $id = $this->getId();
+        // $id = $this->getId();
     
         try {
             $stmt = self::$conn->prepare(
-                "UPDATE Contacts SET type = :type, assigned_to = :assigned_to, updated_at = NOW() WHERE id = :id"
+                "UPDATE Contacts SET type = :type,updated_at = NOW() WHERE id = :id"
             );
     
             $stmt->bindParam(':type', $type, PDO::PARAM_STR);
-            $stmt->bindParam(':assigned_to', $assigned_to, PDO::PARAM_STR);
             $stmt->bindParam(':id', $id, PDO::PARAM_INT);
     
             return $stmt->execute();

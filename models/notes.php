@@ -1,4 +1,8 @@
 <?php
+namespace models;
+require_once '../includes/db.php';
+use PDO;
+use PDOException;
 
 class Notes{
     private static $conn;
@@ -107,28 +111,38 @@ class Notes{
 }
 
 
-    // public static function getNotesByContactId($contact_id): array{
-    //     $stmt = self::$conn->prepare("SELECT * FROM Notes WHERE contact_id = ?");
-    //     $stmt-> execute();
-    //     $Notes =
-    //     mysqli_stmt_bind_param($stmt, 'i', $contact_id);
-    //     mysqli_stmt_execute($stmt);
-    //     $result = mysqli_stmt_get_result($stmt);
+public static function getNotesByContactId($contact_id): array {
+    // Prepare the SQL query to fetch notes for the given contact_id
+    $stmt = self::$conn->prepare("SELECT * FROM Notes WHERE contact_id = :contact_id");
+    
+    // Bind the contact_id parameter to the statement
+    $stmt->bindParam(':contact_id', $contact_id, PDO::PARAM_INT);
+    
+    // Execute the query
+    $stmt->execute();
+    
+    // Fetch all the results
+    $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    
+    $notes = [];
+    
+    // Iterate through the results and create Notes objects
+    foreach ($result as $note) {
+        $newNote = new Notes(
+            $note['id'],
+            $note['contact_id'],
+            $note['comment'],
+            $note['created_by'],
+            $note['created_at']
+        );
+        
+        // Store the note in the array, using the note ID as the key
+        $notes[$newNote->getId()] = $newNote;
+    }
 
-    //     $notes = [];
-    //     while ($note = mysqli_fetch_assoc($result)) {
-    //         $newNote =  new Notes ($note['id'],
-    //                     $note['contact_id'],
-    //                     $note['comment'],
-    //                     $note['created_by'],
-    //                     $note['created_at']
-    //                 );
-
-    //         $notes[$newNote->getId()] = $newNote;
-    //     }
-
-    //     return $notes;
-    // }
+    return $notes;
+}
 
 }
+?>
 

@@ -4,29 +4,6 @@ document.addEventListener("DOMContentLoaded", function () {
     const filterlinks = document.querySelectorAll('.filter-btn');
     const tableRows = document.querySelectorAll('table tbody tr');
     
-    
-
-    // sidenavLinks.forEach(link => {
-    //     link.addEventListener('click', function (e) {
-    //         e.preventDefault();
-
-    //         const target = this.getAttribute('data-target');
-    //         if (target === '../logout.php') {
-    //             window.location.href = target;
-    //         } else {
-    //             fetchData(target);
-    //         }
-    //     });
-    // });
-
-    // filterlinks.forEach(link => {
-    //     link.addEventListener('click', function (e) {
-    //         e.preventDefault();
-    //         const target = this.getAttribute('data-filter');
-    //          filterTable(target);
-           
-    //     });
-    // });
 
     function filterTable(filter) {
         tableRows.forEach(row => {
@@ -138,14 +115,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 });
             }
 
-            //View Contact Button Listener
-            //  const viewContactButton = document.querySelectorAll('view-link');
-            //  if (viewContactButton) {
-            //      viewContactButton.addEventListener('click', function (e) {
-            //          e.preventDefault();
-            //          fetchData('viewcontactdetails.php'); 
-            //      });
-            //  }
 
             const viewLinks = document.querySelectorAll('.view-link'); 
             viewLinks.forEach(link => { 
@@ -164,25 +133,127 @@ document.addEventListener("DOMContentLoaded", function () {
                     fetchData(target); 
                 }); 
             });
-  
 
-            // const assignToMeButton = document.getElementsByClassName(".assignbutton"); 
-            // if(assignToMeButton){
-            //     assignToMeButton.addEventListener('click', function (e) {
-            //         e.preventDefault();
-            //         //empty
+            // Assign to Me button
+document.querySelectorAll('.assignbutton').forEach(button => {
+    button.addEventListener('click', function () {
+        const contactId = this.dataset.contactId;
 
-                    
+        fetch('assignContact.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: `contact_id=${contactId}`
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert(data.message);
+                location.reload(); // Reload the page to reflect changes
+            } else {
+                alert('Error: ' + data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('An error occurred.');
+        });
+    });
+});
 
-            //     });
-            // }
+// Switch button
+document.querySelectorAll('.switchbutton').forEach(button => {
+    button.addEventListener('click', function () {
+        const contactId = this.dataset.contactId;
+        console.log(contactId);
 
-            console.log("Dynamic listeners initialized.");
+        fetch('switchContact.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: `contact_id=${contactId}`
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert(data.message);
+                location.reload();
+            } else {
+                alert('Error: ' + data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('An error occurred.');
+        });
+    });
+});
+
+// document.querySelector('.addnotebtn').addEventListener('click', function () {
+//     const comment = document.querySelector('textarea').value.trim();
+
+//     if (!comment) {
+//         alert('Comment cannot be empty.');
+//         return;
+//     }
+
+//     fetch('addNotes.php', {
+//         method: 'POST',
+//         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+//         body: `comment=${encodeURIComponent(comment)}`
+//     })
+//         .then(response => response.json())
+//         .then(data => {
+//             if (data.success) {
+//                 alert(data.message);
+//                 location.reload(); // Reload the page to display the new note
+//             } else {
+//                 alert('Error: ' + data.message);
+//             }
+//         })
+//         .catch(error => {
+//             console.error('Error:', error);
+//             alert('An error occurred: ' + error.message);
+//         });
+// });
+
+
+
+document.querySelectorAll('.addnotebtn').forEach(button => {
+    button.addEventListener('click', function () {
+        const contactId = this.dataset.contactId1;
+        // const contactId = 2;
+        const comment = document.querySelector('textarea').value;  // Assuming you are using a <textarea> for the comment
+
+        console.log('Contact ID:', contactId);
+        console.log('Comment:', comment);
+
+        if (!comment) {
+            alert('Please enter a comment.');
+            return;  // Don't send the request if comment is empty
         }
 
-        
-    // Contact Button Listener
-    
+        fetch('addNotes.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: `contact_id=${contactId}&comment=${encodeURIComponent(comment)}`
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert(data.message);
+                location.reload();  // Refresh the page to show the new note
+            } else {
+                alert('Error: ' + data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('An error occurred.');
+        });
+    });
+});
+  
+            console.log("Dynamic listeners initialized.");
+        }
 
         // Initialize listeners on page load (for any existing content)
         initializeDynamicListeners();

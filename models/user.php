@@ -85,6 +85,37 @@ class User{
         return self::$users;
     }
 
+
+    public static function getUserById($id): ?User {
+        // Prepare the SQL query
+        $query = "SELECT * FROM users WHERE id = :id";
+        $stmt = self::$conn->prepare($query);
+    
+        // Bind the parameter using PDO
+        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+    
+        // Execute the query
+        $stmt->execute();
+    
+        // Fetch the result
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+    
+        // If the user exists, return a User object
+        if ($user) {
+            return new User(
+                $user['id'],
+                $user['firstname'],
+                $user['lastname'],
+                $user['email'],
+                $user['role'],
+                $user['created_at']
+            );
+        }
+    
+        // Return null if no user found
+        return null;
+    }
+
         public static function getAllUsers() {
         // Prepare the SQL statement
         $stmt = self::$conn->prepare("SELECT * FROM users");

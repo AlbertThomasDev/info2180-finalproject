@@ -10,15 +10,24 @@ if (!isset($_SESSION['user_id'])) {
 require_once '../models/contact.php';
 require_once '../models/notes.php';
 require_once '../includes/db.php';
+require_once '../models/user.php';
 
 use models\Contact;
-//use Notes;
+use models\Notes;
+use models\User;
+
 Contact::setConnection($conn);
 Notes::setConnection($conn);
-global $contact_id, $contact,$updated;
+User::setConnection($conn);
+
+global $contact_id, $contact,$updated,$type,$user,$user2;
 
 if (isset($_GET['id'])) {
     $contact_id = intval($_GET['id']);
+    $contact_id2 = intval($_GET['id']);
+    $_SESSION['contactid'] = $contact_id;
+    $_SESSION['contactId'] = $contact_id2;
+
     $contact = Contact::getContactById($contact_id);
 
     // $updated = Contact::updateContact($contact_id,$userId);
@@ -35,10 +44,8 @@ if (isset($_GET['id'])) {
 }
 
 // Fetch associated notes for the contact
-Notes::getAllNotes(); // Load all notes
-$notes = array_filter(Notes::getNotes(), function ($note) use ($contact_id) {
-    return $note->getContactId() == $contact_id;
-});
+ // Load all notes
+$notes = Notes::getNotesByContactId($contact_id);
 ?>
 
 <!DOCTYPE html>
@@ -57,31 +64,6 @@ $notes = array_filter(Notes::getNotes(), function ($note) use ($contact_id) {
             <h3>Updated on <?php echo htmlspecialchars($contact->getUpdatedAt())?></h3>
             <div>
                 <button class="assignbutton">Assign to me</button>
-                <script>
-document.querySelectorAll('.assignbutton').addEventListener('click', function () {
-    const contactId = this.dataset.contactId;
-s
-    // Send the request to assign the contact
-    fetch('assignContact.php', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ contact_id: contactId })
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            alert('Contact assigned to you successfully!');
-            location.reload(); // Reload to reflect the changes
-        } else {
-            alert('Failed to assign the contact: ' + data.message);
-        }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        alert('An error occurred while assigning the contact.');
-    });
-});
-</script>
                 <?php if($contact->getType() == 'Support'):?>
                 <button class="switchbutton">Switch to Sales Lead</button>
                 <?php else: ?>
@@ -106,7 +88,8 @@ s
                 </tr>
                 <tr>
                     <td><strong>Assigned To:</strong></td>
-                    <td><?php echo htmlspecialchars($contact->getAssignedTo()); ?></td>
+                    <?php $user2 = User::getUserById($contact->getAssignedTo()); ?>
+                    <td><?php echo htmlspecialchars($user2->getFname().' '.$user2->getLname()); ?></td>
                 </tr>
             </table>
             <?php endif; ?>
@@ -116,8 +99,12 @@ s
             <h2>Notes</h2>
             <?php if (!empty($notes)): ?>
                 <?php foreach($notes as $note): ?>
+                    <?php $userId = $note->getCreatedBy(); 
+                    $user = User::getUserById($userId);
+                    ?>
+
             <div class="note"> 
-                <p><strong><?php echo htmlspecialchars($note->getCreatedBy()); ?></strong></p>
+                <p><strong><?php echo htmlspecialchars($user->getFname().' '.$user->getLname()); ?></strong></p>
                 <p><?php echo htmlspecialchars($note->getComment()); ?></p>
                 <small><?php echo htmlspecialchars($note->getCreatedAt()); ?></small>
             </div>
@@ -131,7 +118,7 @@ s
             <div class="add-note">
                 <h3>Add a note about <?php echo htmlspecialchars($contact->getFirstName()); ?> </h3>
                 <textarea rows="3" placeholder="Enter details here"></textarea>
-                <button class="addnotebtn">Add Note</button>
+                <button class="addnotebtn" >Add Note</button>
             </div>
         </div>
     </div>

@@ -14,8 +14,10 @@ if (!isset($_SESSION['user_id'])) {
 $currentUserId = $_SESSION['user_id'];
 
 // Get the contact ID from the request
-$data = json_decode(file_get_contents('php://input'), true);
-$contactId = intval($data['contact_id'] ?? 0);
+// $data = json_decode(file_get_contents('viewcontactdetails.php'), true);
+
+
+$contactId = $_SESSION['contactid'];
 
 if ($contactId <= 0) {
     echo json_encode(['success' => false, 'message' => 'Invalid contact ID']);
@@ -30,7 +32,7 @@ try {
     $success = Contact::updateContact($contactId, $currentUserId);
 
     if ($success) {
-        echo json_encode(['success' => true]);
+        echo json_encode(['success' => true, 'message' => 'Contact successfully assigned']);
     } else {
         echo json_encode(['success' => false, 'message' => 'Failed to assign contact']);
     }
