@@ -1,0 +1,82 @@
+button {
+  color: #222725;
+  padding: 10px 10px;
+  border: none;
+  border-radius: 8px;
+  text-align: center;
+  font-family: "Open Sans", "Inter", sans-serif; 
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #125ef5;
+  color:#222725;
+  transition: 0.1s;
+}
+
+h1{
+  font-family: "Atkinson Hyperlegible", sans-serif;
+  font-size: 32px;
+  font-weight: 800;
+  margin: 0;
+}
+
+h2{
+  font-family: "Atkinson Hyperlegible", sans-serif;
+  font-size: 24px;
+  font-weight: 400;
+  margin: 0;
+}
+
+h3{
+  font-family: "Open Sans", "Inter", sans-serif; 
+  font-size: 14px;  
+  font-weight: 400;
+  color: #353535;
+}
+
+p{
+  font-family: "Open Sans", "Inter", sans-serif; 
+  font-optical-sizing: auto;
+}
+
+th,td{
+  padding: 12px;
+  margin-left: auto;
+  margin-right: auto;
+  font-family: "Cabin", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+  border-bottom: 2px, solid, black;
+}
+
+textarea{
+  width: 100%;
+  height: 200px;
+}
+
+.assignbutton{
+  background-color:lightgreen;
+  border-radius:4px;
+  padding: 5px 10px;
+  color: black;
+  font-weight: 700;
+  justify-content: center;
+}
+
+.switchbutton{
+  background-color: #f5c412;
+  border-radius:4px;
+  padding: 5px 10px;
+  font-weight: 700;
+  justify-content: center;
+}
+
+.notes, .details {
+  border: thin solid #a0a4a2;
+  padding: 15px;
+  border-radius: 5px;
+  margin-top: 20px;
+  font-family: "Open Sans", "Inter", sans-serif; 
+}

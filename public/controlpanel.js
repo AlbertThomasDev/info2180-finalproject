@@ -69,7 +69,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 // fetchData(target); 
 
                 if (target === 'logout.php') { 
-                    window.location.href = target;
+                    window.location.href = '../user_login.php';
                 }
                 else if(target === 'Home.php') {
                     window.location.href = target;               
@@ -187,33 +187,6 @@ document.querySelectorAll('.switchbutton').forEach(button => {
     });
 });
 
-// document.querySelector('.addnotebtn').addEventListener('click', function () {
-//     const comment = document.querySelector('textarea').value.trim();
-
-//     if (!comment) {
-//         alert('Comment cannot be empty.');
-//         return;
-//     }
-
-//     fetch('addNotes.php', {
-//         method: 'POST',
-//         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-//         body: `comment=${encodeURIComponent(comment)}`
-//     })
-//         .then(response => response.json())
-//         .then(data => {
-//             if (data.success) {
-//                 alert(data.message);
-//                 location.reload(); // Reload the page to display the new note
-//             } else {
-//                 alert('Error: ' + data.message);
-//             }
-//         })
-//         .catch(error => {
-//             console.error('Error:', error);
-//             alert('An error occurred: ' + error.message);
-//         });
-// });
 
 
 
